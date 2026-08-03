@@ -15,7 +15,7 @@ cloudinary.v2.config({
 })
 
 const app = express()
-
+app.set('trust proxy', 1)
 //Cors
 app.use(helmet())
 app.use(cors({
