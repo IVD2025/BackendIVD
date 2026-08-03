@@ -23,7 +23,7 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:5173',
     'http://127.0.0.1:3000',
-    'https://front-ivd.vercel.app'
+    'frontend-ivd-2.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
