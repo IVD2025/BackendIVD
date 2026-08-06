@@ -24,6 +24,7 @@ router.put('/perfil',  requireAuth, checkAtleta, validate(updatePerfilAtletaSche
 router.get('/solicitudes-club',          requireAuth, AtletaController.getSolicitudesClub)
 router.post('/solicitudes-club',         requireAuth, checkAtleta, validate(solicitudClubSchema), AtletaController.crearSolicitudClub)
 router.put('/solicitudes-club/:id',      requireAuth, validate(procesarSolicitudSchema), AtletaController.procesarSolicitudClub)
+router.post('/salir-club',               requireAuth, checkAtleta, AtletaController.salirClub)
 
 // Club invita a un atleta (acción del club)
 router.post('/:id/invitar-club', requireAuth, checkClub, AtletaController.invitarClub)

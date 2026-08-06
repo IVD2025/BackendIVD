@@ -58,6 +58,16 @@ export const updateClub = async (req, res, next) => {
   } catch (err) { next(err) }
 }
 
+// El propio atleta se sale de su club actual
+export const salirClub = async (req, res, next) => {
+  try {
+    const resultado = await AtletaModel.updateClub(req.atletaId, null)
+    if (resultado?.error) return res.status(403).json({ error: resultado.error })
+    if (!resultado) return res.status(404).json({ error: 'Atleta no encontrado' })
+    res.json({ mensaje: 'Saliste del club correctamente', atleta: resultado })
+  } catch (err) { next(err) }
+}
+
 // Elimina un atleta 
 export const remove = async (req, res, next) => {
   try {
