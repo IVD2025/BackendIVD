@@ -76,7 +76,7 @@ const RESULTADO_BASE = `
     r.evento_id, e.titulo AS evento_titulo, e.fecha AS evento_fecha, e.lugar AS evento_lugar,
     e.imagen_url AS evento_imagen_url,
     conv.id AS convocatoria_id,
-    u.nombre, u.apellido_paterno, u.apellido_materno,
+    u.nombre, u.apellido_paterno, u.apellido_materno, u.curp,
     a.id AS atleta_id, a.municipio, a.lugar_entrenamiento, a.club_id,
     c_atleta.nombre AS club_nombre,
     ue.nombre AS entrenador_nombre,
@@ -116,7 +116,7 @@ const RESULTADO_GROUP = `
   GROUP BY
     r.id, r.ano_competitivo, r.fecha_registro, r.evento_id, e.titulo, e.fecha, e.lugar, e.imagen_url,
     conv.id,
-    u.nombre, u.apellido_paterno, u.apellido_materno,
+    u.nombre, u.apellido_paterno, u.apellido_materno, u.curp,
     a.id, a.municipio, a.lugar_entrenamiento, a.club_id,
     c_atleta.nombre, ue.nombre, ue.apellido_paterno,
     en.id, r.categoria_id, cat.nombre, r.genero_id, g.nombre, r.disciplina_id, d.nombre, i.bib
