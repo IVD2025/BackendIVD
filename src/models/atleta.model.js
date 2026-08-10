@@ -244,6 +244,9 @@ export const remove = async (atletaId) => {
   )
   if (!rows[0]) return { error: 'Atleta no encontrado' }
 
+  // Las solicitudes de club (pendientes o pasadas) referencian al usuario directamente
+  await pool.query(`DELETE FROM solicitudes_club WHERE usuario_id = $1`, [rows[0].usuario_id])
+
   const { rows: usuarioEliminado } = await pool.query(
     `DELETE FROM usuarios WHERE id = $1 RETURNING supabase_uid`,
     [rows[0].usuario_id]
