@@ -36,6 +36,6 @@ router.get('/:id',  requireAuth, AtletaController.getById)
 // Rutas administrativas (requieren admin)
 router.put('/:id',       requireAuth, checkAdmin, validate(updateAdminAtletaSchema), AtletaController.updateAdmin)
 router.put('/:id/club',  requireAuth, checkAdminOClub, validate(updateClubAtletaSchema), AtletaController.updateClub)
-router.delete('/:id',    requireAuth, AtletaController.remove)
+router.delete('/:id',    requireAuth, checkAdmin, AtletaController.remove)
 
 export default router
