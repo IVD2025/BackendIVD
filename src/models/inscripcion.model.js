@@ -71,9 +71,10 @@ export const findByClub = async (clubId) => {
 export const inscribir = async ({ atletaId, convocatoriaId }) => {
   // Verificar que la convocatoria existe y el evento sigue abierto
   const { rows: convocatoriaInfo } = await pool.query(
-    `SELECT c.id, e.fecha_cierre, e.titulo
+    `SELECT c.id, e.fecha_cierre, e.titulo, cat.edad_min, cat.edad_max, c.genero_id
      FROM convocatorias c
-     JOIN eventos e ON c.evento_id = e.id
+     JOIN eventos e      ON c.evento_id = e.id
+     JOIN categorias cat ON c.categoria_id = cat.id
      WHERE c.id = $1 AND c.estado = true AND e.estado = true`,
     [convocatoriaId]
   )
@@ -89,6 +90,34 @@ export const inscribir = async ({ atletaId, convocatoriaId }) => {
     [atletaId, convocatoriaId]
   )
   if (yaInscrito.length > 0) return { error: 'Ya estás inscrito en esta convocatoria' }
+
+  const { rows: atletaInfo } = await pool.query(
+    `SELECT u.fecha_nacimiento, u.genero_id
+   FROM atletas a JOIN usuarios u ON a.usuario_id = u.id
+   WHERE a.id = $1`,
+    [atletaId]
+  )
+  if (!atletaInfo[0]) return { error: 'Atleta no encontrado' }
+
+  const { fecha_nacimiento, genero_id } = atletaInfo[0]
+  const { edad_min, edad_max, genero_id: generoConvocatoriaId } = convocatoriaInfo[0]
+
+  if (genero_id !== generoConvocatoriaId) {
+    return { error: 'No cumples con el género requerido por esta convocatoria' }
+  }
+
+  if (fecha_nacimiento) {
+    const hoy = new Date()
+    const nacimiento = new Date(fecha_nacimiento)
+    let edad = hoy.getFullYear() - nacimiento.getFullYear()
+    const aunNoCumple = hoy.getMonth() < nacimiento.getMonth() ||
+      (hoy.getMonth() === nacimiento.getMonth() && hoy.getDate() < nacimiento.getDate())
+    if (aunNoCumple) edad--
+
+    if ((edad_min != null && edad < edad_min) || (edad_max != null && edad > edad_max)) {
+      return { error: 'No cumples con el rango de edad requerido por esta convocatoria' }
+    }
+  }
 
   // Asignar un bib aleatorio único en el rango 1-999
   let bib = null

@@ -29,9 +29,9 @@ router.post('/salir-club',               requireAuth, checkAtleta, AtletaControl
 // Club invita a un atleta (acción del club)
 router.post('/:id/invitar-club', requireAuth, checkClub, AtletaController.invitarClub)
 
-// Rutas públicas (listado y detalle)
-router.get('/',     AtletaController.getAll)
-router.get('/:id',  AtletaController.getById)
+// Listado y detalle: requieren sesión iniciada (traen datos personales, incluida la CURP)
+router.get('/',     requireAuth, AtletaController.getAll)
+router.get('/:id',  requireAuth, AtletaController.getById)
 
 // Rutas administrativas (requieren admin)
 router.put('/:id',       requireAuth, checkAdmin, validate(updateAdminAtletaSchema), AtletaController.updateAdmin)
