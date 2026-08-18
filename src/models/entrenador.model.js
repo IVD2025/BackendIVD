@@ -148,7 +148,7 @@ export const updatePerfil = async (entrenadorId, usuarioId, {
 }) => {
   // Datos que viven en la tabla usuarios (compartida con los demás roles)
   if (nombre !== undefined || apellido_paterno !== undefined || apellido_materno !== undefined
-      || telefono !== undefined || genero !== undefined) {
+    || telefono !== undefined || genero !== undefined) {
     await actualizarDatosUsuario(usuarioId, { nombre, apellido_paterno, apellido_materno, telefono, genero })
   }
   if (municipio !== undefined) {
@@ -267,6 +267,12 @@ export const salirDelClub = async (entrenadorId) => {
   if (!info.club_id) return { error: 'No perteneces a ningún club actualmente' }
 
   await pool.query(`UPDATE entrenadores SET club_id = NULL WHERE id = $1`, [entrenadorId])
+  // Si además era el entrenador principal del club, esa referencia también se limpia
+  await pool.query(
+    `UPDATE clubes SET entrenador_id = NULL WHERE id = $1 AND entrenador_id = $2`,
+    [info.club_id, entrenadorId]
+  )
+
 
   try {
     await NotificacionModel.crearParaClub(info.club_id, `El entrenador "${info.entrenador_nombre}" salió de tu club.`)
