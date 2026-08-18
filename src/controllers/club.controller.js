@@ -28,6 +28,9 @@ export const create = async (req, res, next) => {
 // Actualiza los datos de un club existente
 export const update = async (req, res, next) => {
   try {
+    if (!req.esAdmin && String(req.clubId) !== String(req.params.id)) {
+      return res.status(403).json({ error: 'No puedes editar la información de otro club' })
+    }
     const club = await ClubModel.update(req.params.id, req.body)
     if (!club) return res.status(404).json({ error: 'Club no encontrado' })
     res.json({ mensaje: 'Club actualizado', club })

@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import * as ResultadoController from '../controllers/resultado.controller.js'
 import { requireAuth } from '../middlewares/auth.js'
+import { checkAdmin } from '../middlewares/checkAdmin.js'
 import { validate } from '../middlewares/validate.js'
 import { createResultadoSchema, updateResultadoSchema, crearMasivoResultadoSchema } from '../schemas/resultado.schema.js'
 
@@ -19,10 +20,10 @@ router.get('/convocatoria/:convocatoriaId', ResultadoController.getByConvocatori
 router.get('/:id', ResultadoController.getById) 
 
 // Rutas administrativas (requieren autenticación)
-router.post('/', requireAuth, validate(createResultadoSchema), ResultadoController.create)
-router.post('/masivo', requireAuth, validate(crearMasivoResultadoSchema), ResultadoController.crearMasivo)
-router.put('/:id', requireAuth, validate(updateResultadoSchema), ResultadoController.update)
-router.delete('/convocatoria/:convocatoriaId', requireAuth, ResultadoController.removeByConvocatoria)
-router.delete('/:id', requireAuth, ResultadoController.remove)
+router.post('/', requireAuth, checkAdmin, validate(createResultadoSchema), ResultadoController.create)
+router.post('/masivo', requireAuth, checkAdmin, validate(crearMasivoResultadoSchema), ResultadoController.crearMasivo)
+router.put('/:id', requireAuth, checkAdmin, validate(updateResultadoSchema), ResultadoController.update)
+router.delete('/convocatoria/:convocatoriaId', requireAuth, checkAdmin, ResultadoController.removeByConvocatoria)
+router.delete('/:id', requireAuth, checkAdmin, ResultadoController.remove)
 
 export default router
